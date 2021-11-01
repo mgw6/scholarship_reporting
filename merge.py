@@ -52,11 +52,11 @@ if __name__ == '__main__':
         
         try:
             name_list = str(full_name).split(' ')
-            sort_name = name_list[-1].upper() + ", " + (' '.join(name_list[0:-1])).upper()
-            preferred = name_list[1]
+            sort_name = name_list[-1].upper() + ", " + (' '.join(name_list[1:-1])).upper()
+            last_name = ' '.join(name_list[2:])
         except:
             sort_name = pd.NA
-            preferred = pd.NA
+            last_name = pd.NA
         
         
         
@@ -79,7 +79,7 @@ if __name__ == '__main__':
         pd.NA,
         pd.NA,
         vp_sal, 
-        preferred,
+        last_name,
         spouse,
         pd.NA,
         address_1,
