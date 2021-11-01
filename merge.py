@@ -50,6 +50,15 @@ if __name__ == '__main__':
         state = row[1][13]
         zip_code = row[1][14]
         
+        try:
+            name_list = str(full_name).split(' ')
+            sort_name = name_list[-1].upper() + ", " + (' '.join(name_list[0:-1])).upper()
+            preferred = name_list[1]
+        except:
+            sort_name = pd.NA
+            preferred = pd.NA
+        
+        
         
         new_row = [
         schol_name,
@@ -61,7 +70,7 @@ if __name__ == '__main__':
         primary_ID,
         "ONLY",
         pd.NA,
-        "#TODO",
+        sort_name,
         full_name,
         full_name,
         pd.NA,
@@ -70,7 +79,7 @@ if __name__ == '__main__':
         pd.NA,
         pd.NA,
         vp_sal, 
-        "#TODO",
+        preferred,
         spouse,
         pd.NA,
         address_1,
@@ -102,8 +111,11 @@ output = output.sort_values(
     by = output.columns[0],
     )
 
-output.to_excel("output.xlsx", index = False)
+output.to_excel("merge_output.xlsx", index = False)
    
+
+
+#Extra stuff that I don't think I will need but don't want to type again:
     
 """    
 print("Schol_name: " + schol_name)
@@ -123,30 +135,30 @@ print("zip_code: " + zip_code)
 
 
 """
-        relationships.loc[len(relationships)] = [
-        schol_name,
-        schol_desc,
-        "N/A",
-        FY20_q4_val,
-        "N/A",
-        "N/A",
-        primary_ID,
-        "Yes, NOT this year",
-        "None",
-        "#TODO",
-        full_name,
-        full_name,
-        "None",
-        vp_sal, 
-        "#TODO",
-        spouse,
-        "None",
-        address_1,
-        address_2,
-        address_3,
-        city,
-        state,
-        zip_code,
-        ]
-        """
+relationships.loc[len(relationships)] = [
+    schol_name,
+    schol_desc,
+    "N/A",
+    FY20_q4_val,
+    "N/A",
+    "N/A",
+    primary_ID,
+    "Yes, NOT this year",
+    "None",
+    "#TODO",
+    full_name,
+    full_name,
+    "None",
+    vp_sal, 
+    "#TODO",
+    spouse,
+    "None",
+    address_1,
+    address_2,
+    address_3,
+    city,
+    state,
+    zip_code,
+]
+"""
         
