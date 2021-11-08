@@ -7,6 +7,7 @@ to the merge_output_cleaned file
 
 import pandas as pd
 import numpy as np
+from thefuzz import process
 
 class XL_work:
     def get_xl_sheet(file_path):
@@ -14,17 +15,19 @@ class XL_work:
 
 
 if __name__ == '__main__':
-    recip_list = XL_work.get_xl_sheet("XL_Sheets/group_output.xlsx")
     
+    #Extract Sheets
+    recip_list = XL_work.get_xl_sheet("XL_Sheets/group_output.xlsx")
     primary_sheet = XL_work.get_xl_sheet("XL_Sheets/merge_output_cleaned.xlsx")
     
+    #Setup lists
     name_in_primay = []
     name_in_recip_list = []
     fuzz_score = []
     recips = []
     
     
-    
+    #Loop through each row
     for row in primary_sheet.iterrows():
         
         #Direct comparison
@@ -39,21 +42,45 @@ if __name__ == '__main__':
                 recip_row["Recipients"].values[0]
             )
         
-        #Get Fuzzy
-        #elif    
         
-        else:
+        else:    
+            best_match = process.extractOne(row[1][0], recip_list['Schol_name'].values) 
+            
             name_in_primay.append(row[1][0])
-            fuzz_score.append(0)
-            name_in_recip_list.append(pd.NA)
-            recips.append(pd.NA)
+            fuzz_score.append(best_match[1])
+            name_in_recip_list.append(best_match[0])
+            
+            recip_row = recip_list.loc[recip_list['Schol_name'] == best_match[0]]
+            recips.append(
+                recip_row["Recipients"].values[0]
+            )
+            
+            
 
-
-print(len(recips))
-print(len(name_in_primay))
-print(len(name_in_recip_list))
-print(len(fuzz_score))
-
+    
+    #Covnert 4 lists into one np.array
+    data_list = np.flipud(np.rot90(
+        [
+            name_in_primay,
+            name_in_recip_list,
+            fuzz_score,
+            recips,
+        ]
+ 
+    ))
+    
+    
+    #Put the array into a pd.df and export to excep1
+    output_df = pd.DataFrame(
+        data = data_list, 
+        columns = [ 
+            "name_in_primay",
+            "name_in_recip_list",
+            "fuzz_score",
+            "recips", 
+            ]
+        )
+    output_df.to_excel("merge_recips_output.xlsx", index = False)
 
 
 
