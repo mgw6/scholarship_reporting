@@ -51,10 +51,13 @@ if __name__ == '__main__':
     
     test = pd.DataFrame.from_dict(list_for_df)
     
-    test.to_excel("add_output.xlsx", index = False)
+    test.to_excel("group_output.xlsx", index = False)
     
-    # Using this output, I did 
+    # Using this output, I this in Excel:
     # https://www.adinstruments.com/support/knowledge-base/how-can-comma-separated-list-be-converted-cells-column-lt
+    
+    #Next, make a third script to do the fuzzy merge of this list into the google sheet
+    
     
     
     
