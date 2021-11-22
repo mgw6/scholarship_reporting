@@ -27,7 +27,7 @@ if __name__ == '__main__':
     #then groups them
     
     
-    
+    #Set all lists
     donor_name_ls = []
     spouse_ls = []
     vp_sal_ls = []
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         if len(frame.index) == 1:
             continue #We only want the ones with multiple recipients
         
-        
+        #Matching up columns with corr lists
         donor_name_ls.append(person)
         #print(frame.iloc[0][0])
         spouse_ls.append(frame.iloc[0][19])
@@ -56,11 +56,10 @@ if __name__ == '__main__':
         state_ls.append(frame.iloc[0][25])
         zip_ls.append(frame.iloc[0][26])
         
+        #Puts the scholarships in one column for each donor
         temp_schols = ""
-        
         for row in frame.iterrows():
             temp_schols = temp_schols + row[1][0] + "_"
-        
         schol_ls.append(temp_schols)
         
     
@@ -75,11 +74,13 @@ if __name__ == '__main__':
     city_ls,
     state_ls,
     zip_ls,
-    sep = '\n\n'
+    sep = '\n\n' #Read the docs!
     )    
     exit()
+    #This is a tester
     """
     
+    #Make a pandas df
     output = pd.DataFrame({
     'Donor Name' : donor_name_ls,
     'Spouse' : spouse_ls,
@@ -95,4 +96,6 @@ if __name__ == '__main__':
     
     output.to_excel("dup_donors.xlsx", index = False)
     print("Output saved")
+    
+    #We will use the seperator in Google sheets to break the scholarships into multiple rows
     
