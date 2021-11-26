@@ -8,6 +8,10 @@ I copy and pasted this into the main excel file and then used the split text opt
 """
 
 import pandas as pd
+import tkinter.filedialog #tkinter was being a pain, I'm not sure why
+import tkinter as tk
+import os
+
 
 # This may be a lifeline:
 # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.from_dict.html
@@ -18,11 +22,23 @@ class XL_work:
     
     
 if __name__ == '__main__':
-    recip_list = XL_work.get_xl_sheet("XL_Sheets/Update 11.17.2021.xlsx")
-    #TODO: Make a Tkinter option for this. 
     
     
-    schol_name = "RFRBASE_FUND_TITLE_LONG" #This was changed on the 11.17 update. 
+    #Gives the user a GUI to get the file
+    root = tk.Tk()
+    root.withdraw()
+    file_path = tkinter.filedialog.askopenfilename(filetypes = [('Excel Files', '*.xlsx')],
+                                            initialdir = "C:/Users/User/exec_intern/scholarship_reporting",
+                                            title = "Select The excel sheet" 
+                                            ) #This opens the file selector  
+    
+    recip_list = XL_work.get_xl_sheet(file_path)
+    
+    """
+    Name of the scholarship column
+    This was changed on the 11.17 update. 
+    """
+    schol_name = "RFRBASE_FUND_TITLE_LONG" 
     
     name_list = ['First Name', 'Last Name'] 
     #This is the names of the columns we want to pull from
@@ -90,7 +106,10 @@ if __name__ == '__main__':
     #Make a pd.DataFrame from this list of lists
     test = pd.DataFrame.from_dict(list_for_df)
     
-    test.to_excel("11.17_update_group.xlsx", index = False)
+    
+    output_name = os.path.splitext(os.path.basename(file_path))[0] + "_grouped.xlsx"
+    
+    test.to_excel(output_name, index = False)
     print("Output saved")
     
     # Using this output, I this in Excel:
