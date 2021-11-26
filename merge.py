@@ -1,12 +1,14 @@
-#MacGregor Winegard
-#10/28/2021 
-#This is a quick automation of Scholarship reporting
-#Merges FY21 Master with Endowed Scholarship Relationships
+"""
+MacGregor Winegard
+10/28/2021 
+This is a quick automation of Scholarship reporting
+Merges FY21 Master with Endowed Scholarship Relationships
+"""
 
 import pandas as pd
 
 
-class XL_work:
+class XL_work: #This was copied from some pd work I did a long time ago
     def get_xl_sheet(file_path):
         return pd.read_excel(file_path)
     
@@ -17,19 +19,16 @@ if __name__ == '__main__':
     FY21_Primary = XL_work.get_xl_sheet("XL_Sheets/FY21 Scholarship Reporting COPY.xlsx")
     FY21_Primary = FY21_Primary.drop(columns = FY21_Primary.columns[22:]) #remove extra columns
     
-    """
-    for column in FY21_Primary.columns:
-        FY21_Primary.loc[FY21_Primary[column].isna(), column] = "None"
-    """
-    
     relationships = XL_work.get_xl_sheet("XL_Sheets/Endowed Scholarship Relationships.xlsx")
     
     output = relationships.copy()
     
-    #TODO: make new df, then we will append this new one to relationships
     
-    
-    for row in FY21_Primary.iterrows():
+    for row in FY21_Primary.iterrows(): 
+        """
+        Loop through the rows in last years list
+        This first part just pulls out info from the specified columns
+        """
         schol_name = row[1][0]
         schol_desc = row[1][1]  
         FY20_q4_val = row[1][2]
@@ -60,6 +59,9 @@ if __name__ == '__main__':
         
         
         
+        """
+        Now we make a new row as a list
+        """
         new_row = [
         schol_name,
         schol_desc,
@@ -97,68 +99,31 @@ if __name__ == '__main__':
         pd.NA,
         ]
         
+        
+        """
+        Append new row to output df
+        I know I could have done that in way less lines, 
+        but in making sure that I was lining up the columns correctly from one sheet to the other
+        I just pulled them out as variables and then printed the variables.
+        So its not the most memory or time efficient way but it does the job.
+        I also was not terribly worried about memory or time because this was a relatively small data set. 
+        Correctness and certainty of it was way more important. 
+        """
+        
         output = output.append(pd.Series(
         new_row,
         index = output.columns),
         ignore_index = True
         )
+
+    #Sort by Scholarship name
+    output = output.sort_values(
+        by = output.columns[0],
+        )
         
-
-
-#TODO: Sort data by fund name
-
-output = output.sort_values(
-    by = output.columns[0],
-    )
-
-output.to_excel("merge_output.xlsx", index = False)
-   
-
-
-#Extra stuff that I don't think I will need but don't want to type again:
-    
-"""    
-print("Schol_name: " + schol_name)
-print("Schol_desc: " + schol_desc) 
-print("FY20_q4_val: " + str(FY20_q4_val)) 
-print("primary_ID: " + str(primary_ID)) 
-print("full_name: " + full_name) 
-print("spouse: " + spouse) 
-print("vp_sal: " + vp_sal) 
-print("address_1: " + address_1)
-print("address_2: " + address_2) 
-print("address_3: " + address_3) 
-print("city: " + city) 
-print("state: " + state) 
-print("zip_code: " + zip_code) 
-"""
-
-
-"""
-relationships.loc[len(relationships)] = [
-    schol_name,
-    schol_desc,
-    "N/A",
-    FY20_q4_val,
-    "N/A",
-    "N/A",
-    primary_ID,
-    "Yes, NOT this year",
-    "None",
-    "#TODO",
-    full_name,
-    full_name,
-    "None",
-    vp_sal, 
-    "#TODO",
-    spouse,
-    "None",
-    address_1,
-    address_2,
-    address_3,
-    city,
-    state,
-    zip_code,
-]
-"""
         
+    output.to_excel("merge_output.xlsx", index = False)
+    """
+    Output is the relationships sheet, with the 
+    values that were only on FY 21 Master added. 
+    """
